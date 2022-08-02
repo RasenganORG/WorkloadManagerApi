@@ -15,6 +15,10 @@ const addProject = async (req, res, next) => {
 	}
 }
 
+// this.usersAssigned = usersAssigned;
+// this.billingOption = billingOption;
+// this.colorLabel = colorLabel
+
 const getAllProjects = async (req, res, next) => {
 	try {
 		const projects = await firestore.collection('projects');
@@ -26,12 +30,15 @@ const getAllProjects = async (req, res, next) => {
 			data.forEach(doc => {
 				const project = new Project(
 					doc.id,
-					doc.data().name,
+					doc.data().title,
 					doc.data().description,
 					doc.data().dueDate,
 					doc.data().creationDate,
 					doc.data().tasks,
-					doc.data().status
+					doc.data().status,
+					doc.data().usersAssigned,
+					doc.data().billingOption,
+					doc.data().colorLabel
 				);
 				projectsArray.push(project);
 			});
@@ -43,40 +50,40 @@ const getAllProjects = async (req, res, next) => {
 }
 
 const getProject = async (req, res, next) => {
-    try {
-        const id = req.params.id;
-        const project = await firestore.collection('projects').doc(id);
-        const data = await project.get();
-        if(!data.exists) {
-            res.status(404).send('Project with the given ID not found');
-        }else {
-            res.send(data.data());
-        }
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
+	try {
+		const id = req.params.id;
+		const project = await firestore.collection('projects').doc(id);
+		const data = await project.get();
+		if (!data.exists) {
+			res.status(404).send('Project with the given ID not found');
+		} else {
+			res.send(data.data());
+		}
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
 }
 
 const updateProject = async (req, res, next) => {
-    try {
-        const id = req.params.id;
-        const data = req.body;
-        const project =  await firestore.collection('projects').doc(id);
-        await project.update(data);
-        res.send('Project record updated successfuly');        
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
+	try {
+		const id = req.params.id;
+		const data = req.body;
+		const project = await firestore.collection('projects').doc(id);
+		await project.update(data);
+		res.send('Project record updated successfuly');
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
 }
 
 const deleteProject = async (req, res, next) => {
-    try {
-        const id = req.params.id;
-        await firestore.collection('projects').doc(id).delete();
-        res.send('Project  deleted successfuly');
-    } catch (error) {
-        res.status(400).send(error.message);
-    }
+	try {
+		const id = req.params.id;
+		await firestore.collection('projects').doc(id).delete();
+		res.send('Project  deleted successfuly');
+	} catch (error) {
+		res.status(400).send(error.message);
+	}
 }
 
 module.exports = {

@@ -1,13 +1,16 @@
 class Project {
-	constructor(id, name, description, dueDate, creationDate,
-			tasks, status ) {
+	constructor(id, title, description, dueDate, creationDate,
+			tasks, status, usersAssigned, billingOption, colorLabel ) {
 					this.id = id;
-					this.name = name;
+					this.title = title;
 					this.description = description;
 					this.dueDate = dueDate;
 					this.creationDate = creationDate;
 					this.tasks = tasks;
-					this.status = status
+					this.status = status;
+					this.usersAssigned = usersAssigned;
+					this.billingOption = billingOption;
+					this.colorLabel = colorLabel
 	}
 }
 

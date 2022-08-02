@@ -8,20 +8,52 @@ const firestore = firebase.firestore();
 const addUser = async (req, res, next) => {
 	try {
 		const data = req.body;
-		await firestore.collection('users').doc().set(data);
-		const id = req.params.id
 
-		// res.send('User saved successfuly');
-		res.status(201).json({
-			id: data.id,
-			username: data.username,
-			email: data.email,
-			password: data.password,
+		// Get email from from submitted
+		const email = req.body.email;
+		// Reference to Firestore 'users' collection
+		const usersCollection = firestore.collection('users');
+		// Reference to a QuerySnapshot whith all users that have the requested email
+		const userSnapshot = await usersCollection
+			.where('email', '==', email)
+			.get();
 
-		})
+		if (userSnapshot.empty) {
+			await firestore.collection('users').doc().set(data);
+			const id = req.params.id
+
+			// res.send('User saved successfuly');
+			res.status(201).json({
+				id: data.id,
+				username: data.username,
+				email: data.email,
+				password: data.password,
+
+			})
+
+		} else {
+			res.status(404).send('Email is already used!');
+		}
 	} catch (error) {
 		res.status(400).send(error.message);
 	}
+
+	// try {
+	// 	const data = req.body;
+	// 	await firestore.collection('users').doc().set(data);
+	// 	const id = req.params.id
+
+	// 	// res.send('User saved successfuly');
+	// 	res.status(201).json({
+	// 		id: data.id,
+	// 		username: data.username,
+	// 		email: data.email,
+	// 		password: data.password,
+
+	// 	})
+	// } catch (error) {
+	// 	res.status(400).send(error.message);
+	// }
 }
 
 const getAllUsers = async (req, res, next) => {
@@ -29,6 +61,7 @@ const getAllUsers = async (req, res, next) => {
 		const users = await firestore.collection('users');
 		const data = await users.get();
 		const usersArray = [];
+
 		if (data.empty) {
 			res.status(404).send('No user record found');
 		} else {
