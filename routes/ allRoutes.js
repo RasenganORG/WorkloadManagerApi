@@ -1,18 +1,20 @@
 const express = require('express');
 const { addProject,
-	getAllProjects,
-	getProject,
-	updateProject,
+  getAllProjects,
+  getProject,
+  updateProject,
+  deleteProject,
   addTask,
-	deleteProject
+  updateTask,
+  deleteTask
 } = require('../controllers/projectController');
 
 const { addUser,
-	getAllUsers,
-	getUser,
-	updateUser,
-	deleteUser,
-	getLoggedUser
+  getAllUsers,
+  getUser,
+  updateUser,
+  deleteUser,
+  getLoggedUser
 } = require('../controllers/userController');
 
 
@@ -22,8 +24,9 @@ router.post('/project', addProject);
 router.get('/projects', getAllProjects);
 router.get('/project/:id', getProject);
 router.put('/project/:id', updateProject);
-router.put('/project/:id/add-task', addTask)
 router.delete('/project/:id', deleteProject);
+router.put('/project/:id/add-task', addTask)
+router.put('/project/:id/tasks/:taskId', updateTask)
 
 router.post('/user', addUser);
 router.get('/users', getAllUsers);
@@ -33,5 +36,5 @@ router.delete('/user/:id', deleteUser);
 router.get('/getLoggedUser/:email', getLoggedUser);
 
 module.exports = {
-	routes: router
+  routes: router
 }

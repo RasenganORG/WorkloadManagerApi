@@ -87,7 +87,7 @@ const deleteProject = async (req, res, next) => {
     res.status(400).send(error.message);
   }
 }
-const addTask = async(req, res, next) => {
+const addTask = async (req, res, next) => {
   try {
     const id = req.params.id;
     const data = req.body;
@@ -101,11 +101,28 @@ const addTask = async(req, res, next) => {
     res.status(400).send(error.message);
   }
 }
+const updateTask = async (req, res, next) => {
+  const id = req.params.id;
+  const { currentTask, formData } = req.body;
+
+  console.log(currentTask, formData)
+  const project = await firestore.collection('projects').doc(id)
+  const batch = firestore.batch()
+  batch.update(project, { tasks: FieldValue.arrayRemove(currentTask) })
+  batch.update(project, { tasks: FieldValue.arrayUnion(formData) })
+
+  batch.commit()
+    .then(() => res.send('Project tasks updated successfuly'))
+    .catch(err => res.status(400).send(err.message))
+
+}
+
 module.exports = {
   addProject,
   getAllProjects,
   getProject,
   updateProject,
+  deleteProject,
   addTask,
-  deleteProject
+  updateTask,
 }

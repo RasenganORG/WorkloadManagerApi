@@ -97,6 +97,7 @@ const getLoggedUser = async (req, res, next) => {
       console.log('user from db:', user);
 
       const result = user.password === pwd ? user : null;
+
       if (result) res.send(result);
       else res.status(404).send('Username or password invalid!');
     }
