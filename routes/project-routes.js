@@ -17,6 +17,7 @@ router.get('/project/:id', getProject);
 router.put('/project/:id', updateProject);
 router.delete('/project/:id', deleteProject);
 router.put('/projects/:id/add-task', addTask);
+router.put('/project/:id/tasks/:taskId/delete', deleteTask);
 router.put('/projects/:id/tasks/:taskId', updateTask);
 
 

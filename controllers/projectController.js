@@ -102,14 +102,14 @@ const addTask = async (req, res, next) => {
   }
 }
 const updateTask = async (req, res, next) => {
+  console.log("Daba")
   const id = req.params.id;
-  const { currentTask, formData } = req.body;
-
-  console.log(currentTask, formData)
+  const { currentTask, newTask } = req.body;
   const project = await firestore.collection('projects').doc(id)
+
   const batch = firestore.batch()
   batch.update(project, { tasks: FieldValue.arrayRemove(currentTask) })
-  batch.update(project, { tasks: FieldValue.arrayUnion(formData) })
+  batch.update(project, { tasks: FieldValue.arrayUnion(newTask) })
 
   batch.commit()
     .then(() => res.send('Project tasks updated successfuly'))
@@ -117,6 +117,20 @@ const updateTask = async (req, res, next) => {
 
 }
 
+const deleteTask = async (req, res, next) => {
+  try {
+    const id = req.params.id;
+    const data = req.body;
+    const project = await firestore.collection('projects').doc(id)
+    await project.update({
+      tasks: FieldValue.arrayRemove(data)
+      //https://firebase.google.com/docs/firestore/manage-data/add-data#update_elements_in_an_array for ref
+    })
+    res.send('Project tasks updated successfuly');
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+}
 module.exports = {
   addProject,
   getAllProjects,
@@ -125,4 +139,5 @@ module.exports = {
   deleteProject,
   addTask,
   updateTask,
+  deleteTask
 }
