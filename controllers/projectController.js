@@ -16,10 +16,6 @@ const addProject = async (req, res, next) => {
   }
 }
 
-// this.usersAssigned = usersAssigned;
-// this.billingOption = billingOption;
-// this.colorLabel = colorLabel
-
 const getAllProjects = async (req, res, next) => {
   try {
     const projects = await firestore.collection('projects');
@@ -91,6 +87,7 @@ const addTask = async (req, res, next) => {
   try {
     const id = req.params.id;
     const data = req.body;
+    console.log(data)
     const project = await firestore.collection('projects').doc(id)
     await project.update({
       tasks: FieldValue.arrayUnion(data)

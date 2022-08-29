@@ -17,6 +17,10 @@ const { addUser,
   getLoggedUser
 } = require('../controllers/userController');
 
+const {
+  addBilling,
+  getBillingOptions
+} = require('../controllers/billingController')
 
 const router = express.Router();
 
@@ -36,6 +40,8 @@ router.put('/user/:id', updateUser);
 router.delete('/user/:id', deleteUser);
 router.get('/getLoggedUser/:email', getLoggedUser);
 
+router.post('/billing', addBilling);
+router.get('/billing', getBillingOptions)
 module.exports = {
   routes: router
 }
