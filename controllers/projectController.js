@@ -83,11 +83,11 @@ const deleteProject = async (req, res, next) => {
     res.status(400).send(error.message);
   }
 }
+
 const addTask = async (req, res, next) => {
   try {
     const id = req.params.id;
     const data = req.body;
-    console.log(data)
     const project = await firestore.collection('projects').doc(id)
     await project.update({
       tasks: FieldValue.arrayUnion(data)
@@ -98,20 +98,18 @@ const addTask = async (req, res, next) => {
     res.status(400).send(error.message);
   }
 }
+
 const updateTask = async (req, res, next) => {
-  console.log("Daba")
   const id = req.params.id;
   const { currentTask, newTask } = req.body;
   const project = await firestore.collection('projects').doc(id)
-
   const batch = firestore.batch()
+
   batch.update(project, { tasks: FieldValue.arrayRemove(currentTask) })
   batch.update(project, { tasks: FieldValue.arrayUnion(newTask) })
-
   batch.commit()
     .then(() => res.send('Project tasks updated successfuly'))
     .catch(err => res.status(400).send(err.message))
-
 }
 
 const deleteTask = async (req, res, next) => {
@@ -128,6 +126,7 @@ const deleteTask = async (req, res, next) => {
     res.status(400).send(error.message);
   }
 }
+
 module.exports = {
   addProject,
   getAllProjects,

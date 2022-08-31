@@ -22,8 +22,17 @@ const {
   getBillingOptions
 } = require('../controllers/billingController')
 
+const {
+  addUTP,
+  getUTP,
+  updateUTP,
+  deleteUTP,
+  deleteProjectUTP
+} = require('../controllers/user_task_projectController')
+
 const router = express.Router();
 
+//project routers
 router.post('/project', addProject);
 router.get('/projects', getAllProjects);
 router.get('/project/:id', getProject);
@@ -33,6 +42,7 @@ router.put('/project/:id/add-task', addTask)
 router.put('/project/:id/tasks/:taskId/delete', deleteTask);
 router.put('/project/:id/tasks/:taskId', updateTask)
 
+//user routes
 router.post('/user', addUser);
 router.get('/users', getAllUsers);
 router.get('/user/:id', getUser);
@@ -40,8 +50,18 @@ router.put('/user/:id', updateUser);
 router.delete('/user/:id', deleteUser);
 router.get('/getLoggedUser/:email', getLoggedUser);
 
+//billing routes
 router.post('/billing', addBilling);
 router.get('/billing', getBillingOptions)
+
+//user_task_project routes 
+router.post('/user_task_project', addUTP)
+router.get('/user_task_project', getUTP)
+router.put('/user_task_project/:id', updateUTP)
+router.delete('/user_task_project/:id', deleteUTP)
+router.delete('/user_task_project/project-delete/:projectId', deleteProjectUTP)
+
+
 module.exports = {
   routes: router
 }
