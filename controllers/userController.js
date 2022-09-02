@@ -2,6 +2,7 @@
 
 const firebase = require('../db');
 const User = require('../models/user');
+const { addProject } = require('./projectController');
 const firestore = firebase.firestore();
 
 
@@ -128,11 +129,48 @@ const deleteUser = async (req, res, next) => {
   }
 }
 
+const updateUsersProject = async (req, res, next) => {
+  const { usersToAddProject, usersToRemoveProject } = req.body.data
+  const projectId = req.body.projectId
+
+  firestore.collection("users").get()
+    .then(function (querySnapshot) {
+      querySnapshot.forEach(function (doc) {
+        usersToAddProject.forEach((user) => {
+          if (user === doc.id) {
+            const newArr = doc.data().projectsAssignedTo
+            newArr.push(projectId)
+            console.log(newArr)
+            firestore.collection("users").doc(doc.id).update({
+              projectsAssignedTo: newArr
+            })
+          }
+        })
+
+        usersToRemoveProject.forEach((user) => {
+          if (user === doc.id) {
+            const projectIndex = doc.data().projectsAssignedTo.indexOf(projectId)
+            const arrayWithRemovedProject = doc.data().projectsAssignedTo
+
+            arrayWithRemovedProject.splice(projectIndex, 1)
+
+            firestore.collection("users").doc(doc.id).update({
+              projectsAssignedTo: arrayWithRemovedProject
+            })
+          }
+        })
+      })
+      res.send('Record deleted successfuly');
+    })
+    .catch(error => res.status(400).send(error.message))
+}
+
 module.exports = {
   addUser,
   getAllUsers,
   getUser,
   updateUser,
   deleteUser,
-  getLoggedUser
+  getLoggedUser,
+  updateUsersProject
 }

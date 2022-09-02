@@ -65,6 +65,30 @@ const deleteUTP = async (req, res, next) => {
   }
 }
 
+const removeUsersFromUTPs = async (req, res, next) => {
+  const batch = firestore.batch()
+  const projectId = req.params.projectId;
+  const usersToRemoveArr = req.body
+  const projectsToUpdate = await firestore
+    .collection('users_tasks_projects')
+    .where("projectId", "==", projectId)
+    .get()
+
+  usersToRemoveArr.forEach((userIdToRemove, index) => {
+    projectsToUpdate.forEach((project, index) => {
+      const utpId = project.data().userId
+      if (utpId == userIdToRemove) {
+        console.log(project.ref)
+        batch.update(project.ref, { userId: "" })
+      }
+    })
+  })
+
+  batch.commit()
+    .then(() => res.send('User_task_project items updatefd successfuly'))
+    .catch(err => res.status(400).send(err.message))
+}
+
 const deleteProjectUTP = async (req, res, next) => {
   const batch = firestore.batch()
   const projectId = req.params.projectId;
@@ -88,5 +112,6 @@ module.exports = {
   getUTP,
   updateUTP,
   deleteUTP,
-  deleteProjectUTP
+  deleteProjectUTP,
+  removeUsersFromUTPs
 }

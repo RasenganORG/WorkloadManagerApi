@@ -14,7 +14,8 @@ const { addUser,
   getUser,
   updateUser,
   deleteUser,
-  getLoggedUser
+  getLoggedUser,
+  updateUsersProject
 } = require('../controllers/userController');
 
 const {
@@ -27,7 +28,8 @@ const {
   getUTP,
   updateUTP,
   deleteUTP,
-  deleteProjectUTP
+  deleteProjectUTP,
+  removeUsersFromUTPs
 } = require('../controllers/user_task_projectController')
 
 const router = express.Router();
@@ -49,6 +51,7 @@ router.get('/user/:id', getUser);
 router.put('/user/:id', updateUser);
 router.delete('/user/:id', deleteUser);
 router.get('/getLoggedUser/:email', getLoggedUser);
+router.put('/users/:projectId', updateUsersProject)
 
 //billing routes
 router.post('/billing', addBilling);
@@ -60,6 +63,7 @@ router.get('/user_task_project', getUTP)
 router.put('/user_task_project/:id', updateUTP)
 router.delete('/user_task_project/:id', deleteUTP)
 router.delete('/user_task_project/project-delete/:projectId', deleteProjectUTP)
+router.put('/user_task_project/remove-users/:projectId', removeUsersFromUTPs)
 
 
 module.exports = {
