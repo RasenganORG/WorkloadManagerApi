@@ -4,9 +4,7 @@ const { addProject,
   getProject,
   updateProject,
   deleteProject,
-  addTask,
-  updateTask,
-  deleteTask
+
 } = require('../controllers/projectController');
 
 const { addUser,
@@ -23,14 +21,14 @@ const {
   getBillingOptions
 } = require('../controllers/billingController')
 
-const {
-  addUTP,
-  getUTP,
-  updateUTP,
-  deleteUTP,
-  deleteProjectUTP,
-  removeUsersFromUTPs
-} = require('../controllers/user_task_projectController')
+const { addTask,
+  getTask,
+  getAllTasks,
+  updateTask,
+  deleteTask,
+  deleteProjectTasks,
+  removeUsersFromTasks
+} = require('../controllers/tasksController')
 
 const router = express.Router();
 
@@ -40,9 +38,7 @@ router.get('/projects', getAllProjects);
 router.get('/project/:id', getProject);
 router.put('/project/:id', updateProject);
 router.delete('/project/:id', deleteProject);
-router.put('/project/:id/add-task', addTask)
-router.put('/project/:id/tasks/:taskId/delete', deleteTask);
-router.put('/project/:id/tasks/:taskId', updateTask)
+
 
 //user routes
 router.post('/user', addUser);
@@ -57,13 +53,14 @@ router.put('/users/:projectId', updateUsersProject)
 router.post('/billing', addBilling);
 router.get('/billing', getBillingOptions)
 
-//user_task_project routes 
-router.post('/user_task_project', addUTP)
-router.get('/user_task_project', getUTP)
-router.put('/user_task_project/:id', updateUTP)
-router.delete('/user_task_project/:id', deleteUTP)
-router.delete('/user_task_project/project-delete/:projectId', deleteProjectUTP)
-router.put('/user_task_project/remove-users/:projectId', removeUsersFromUTPs)
+//tasks routes 
+router.post('/tasks', addTask);
+router.get('/tasks', getTask);
+router.get('/tasks/get-all', getAllTasks);
+router.put('/tasks/:id', updateTask);
+router.delete('/tasks/:id', deleteTask);
+router.delete('/tasks/project-delete/:projectId', deleteProjectTasks);
+router.put('/tasks/remove-users/:projectId', removeUsersFromTasks);
 
 
 module.exports = {

@@ -2,7 +2,6 @@
 
 const firebase = require('../db');
 const User = require('../models/user');
-const { addProject } = require('./projectController');
 const firestore = firebase.firestore();
 
 
@@ -51,6 +50,7 @@ const getAllUsers = async (req, res, next) => {
           doc.data().avatar,
           doc.data().projectsAssignedTo,
           doc.data().loggedIn,
+          doc.data().plannedWorkload,
         );
         usersArray.push(user);
       });
@@ -136,29 +136,35 @@ const updateUsersProject = async (req, res, next) => {
   firestore.collection("users").get()
     .then(function (querySnapshot) {
       querySnapshot.forEach(function (doc) {
-        usersToAddProject.forEach((user) => {
-          if (user === doc.id) {
-            const newArr = doc.data().projectsAssignedTo
-            newArr.push(projectId)
-            console.log(newArr)
-            firestore.collection("users").doc(doc.id).update({
-              projectsAssignedTo: newArr
-            })
-          }
-        })
+        if (usersToAddProject) {
+          usersToAddProject.forEach((user) => {
+            if (user === doc.id) {
+              const newArr = doc.data().projectsAssignedTo
+              newArr.push(projectId)
+              firestore.collection("users").doc(doc.id).update({
+                projectsAssignedTo: newArr
+              })
+            }
+          })
+        } else {
+        }
 
-        usersToRemoveProject.forEach((user) => {
-          if (user === doc.id) {
-            const projectIndex = doc.data().projectsAssignedTo.indexOf(projectId)
-            const arrayWithRemovedProject = doc.data().projectsAssignedTo
+        if (usersToRemoveProject) {
+          usersToRemoveProject.forEach((user) => {
+            if (user === doc.id) {
+              const projectIndex = doc.data().projectsAssignedTo.indexOf(projectId)
+              const arrayWithRemovedProject = doc.data().projectsAssignedTo
 
-            arrayWithRemovedProject.splice(projectIndex, 1)
+              arrayWithRemovedProject.splice(projectIndex, 1)
 
-            firestore.collection("users").doc(doc.id).update({
-              projectsAssignedTo: arrayWithRemovedProject
-            })
-          }
-        })
+              firestore.collection("users").doc(doc.id).update({
+                projectsAssignedTo: arrayWithRemovedProject
+              })
+            }
+          })
+        } else {
+        }
+
       })
       res.send('Record deleted successfuly');
     })
