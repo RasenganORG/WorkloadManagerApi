@@ -28,7 +28,12 @@ const { addTask,
   deleteTask,
   deleteProjectTasks,
   removeUsersFromTasks
-} = require('../controllers/tasksController')
+} = require('../controllers/tasksController');
+
+const { addLoggedTime,
+  getAllLoggedTime
+} = require('../controllers/loggedTimeController');
+
 
 const router = express.Router();
 
@@ -61,6 +66,10 @@ router.put('/tasks/:id', updateTask);
 router.delete('/tasks/:id', deleteTask);
 router.delete('/tasks/project-delete/:projectId', deleteProjectTasks);
 router.put('/tasks/remove-users/:projectId', removeUsersFromTasks);
+
+//logged time routers
+router.post('/loggedTime/add', addLoggedTime);
+router.get('/loggedTime/get-all', getAllLoggedTime);
 
 
 module.exports = {
