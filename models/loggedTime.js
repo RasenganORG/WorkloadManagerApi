@@ -1,13 +1,10 @@
 class LoggedTime {
-  constructor(userId, projectId, date, taskId, loggedHours, comment) {
+  constructor(id, userId, projectId, date, task) {
+    this.id = id;
     this.userId = userId;
     this.projectId = projectId;
     this.date = date
-    this.task = {
-      taskId,
-      loggedHours,
-      comment,
-    }
+    this.task = task
   }
 }
 

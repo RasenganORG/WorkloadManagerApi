@@ -1,5 +1,6 @@
 const express = require('express');
-const { addProject,
+const {
+  addProject,
   getAllProjects,
   getProject,
   updateProject,
@@ -7,7 +8,8 @@ const { addProject,
 
 } = require('../controllers/projectController');
 
-const { addUser,
+const {
+  addUser,
   getAllUsers,
   getUser,
   updateUser,
@@ -21,7 +23,8 @@ const {
   getBillingOptions
 } = require('../controllers/billingController')
 
-const { addTask,
+const {
+  addTask,
   getTask,
   getAllTasks,
   updateTask,
@@ -31,9 +34,16 @@ const { addTask,
 } = require('../controllers/tasksController');
 
 const { addLoggedTime,
-  getAllLoggedTime
+  getAllLoggedTime,
+  getLoggedTimeByTask,
+  getLoggedTimeByProject
 } = require('../controllers/loggedTimeController');
 
+const {
+  userProjectAdd,
+  getUserProjects,
+  getProjectUsers,
+} = require('../controllers/userProjectController');
 
 const router = express.Router();
 
@@ -69,8 +79,14 @@ router.put('/tasks/remove-users/:projectId', removeUsersFromTasks);
 
 //logged time routers
 router.post('/loggedTime/add', addLoggedTime);
-router.get('/loggedTime/get-all', getAllLoggedTime);
+router.get('/loggedTime/getAll', getAllLoggedTime);
+router.get('/loggedTime/byTask/:taskId', getLoggedTimeByTask);
+router.get('/loggedTime/byProject/:projectId', getLoggedTimeByProject);
 
+//user project routes
+router.get('/userProject/add', userProjectAdd)
+router.get('/userProject/getUsersProjects', getUserProjects)
+router.get('/userProject/getProjectUsers', getProjectUsers)
 
 module.exports = {
   routes: router
