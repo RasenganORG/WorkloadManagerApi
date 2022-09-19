@@ -4,11 +4,57 @@ const firebase = require('../db');
 const UserProject = require('../models/userProject')
 const firestore = firebase.firestore();
 
-const userProjectAdd = async (req, res, next) => {
+
+const addUserProject = async (req, res, next) => {
   try {
+    const batch = firestore.batch()
+    let userProject = firestore.collection('userProject')
     const data = req.body;
-    await firestore.collection('userProject').doc().set(data);
+    data.forEach(user => {
+      console.log(user)
+      batch.set(userProject.doc(), user)
+    })
+    await batch.commit();
     res.send('UserProject added successfuly');
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+}
+
+//remove all project entries 
+const removeUserProjects = async (req, res, next) => {
+  try {
+    const projectId = req.params.projectId
+    const batch = firestore.batch()
+    const userProject = await firestore.collection('userProject').get()
+    userProject.forEach(userProject => {
+      if (userProject.data().projectId === projectId) {
+        batch.delete(userProject.ref)
+      }
+    })
+    await batch.commit();
+
+    res.send('UserProject project entries deleted successfuly');
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+}
+
+//delete all users entries
+const removeProjectUsers = async (req, res, next) => {
+  try {
+    const userId = req.params.userId
+    const batch = firestore.batch()
+    const userProject = await firestore.collection('userProject').get()
+    userProject.forEach(userProject => {
+      if (userProject.data().userId === userId) {
+        batch.delete(userProject.ref)
+      }
+      // batch.set(userProject.doc(), user)
+    })
+    await batch.commit();
+
+    res.send('UserProject user entries deleted successfuly');
   } catch (error) {
     res.status(400).send(error.message);
   }
@@ -17,7 +63,7 @@ const userProjectAdd = async (req, res, next) => {
 const getUserProjects = async (req, res, next) => {
   try {
     // console.log(req.body.userId)
-    const userId = req.body.userId
+    const userId = req.params.userId
     const userProject = await firestore.collection('userProject');
     const data = await userProject.get();
     const userProjectsArray = [];
@@ -30,6 +76,7 @@ const getUserProjects = async (req, res, next) => {
             doc.id,
             doc.data().userId,
             doc.data().projectId,
+            doc.data().availability
           );
           userProjectsArray.push(userProjectObj);
 
@@ -44,7 +91,7 @@ const getUserProjects = async (req, res, next) => {
 
 const getProjectUsers = async (req, res, next) => {
   try {
-    const projectId = req.body.projectId
+    const projectId = req.params.projectId
     const userProject = await firestore.collection('userProject');
     const data = await userProject.get();
     const userProjectsArray = [];
@@ -57,6 +104,8 @@ const getProjectUsers = async (req, res, next) => {
             doc.id,
             doc.data().userId,
             doc.data().projectId,
+            doc.data().availability
+
           );
           userProjectsArray.push(userProjectObj);
         }
@@ -69,7 +118,9 @@ const getProjectUsers = async (req, res, next) => {
 }
 
 module.exports = {
-  userProjectAdd,
+  addUserProject,
   getUserProjects,
   getProjectUsers,
+  removeUserProjects,
+  removeProjectUsers
 }

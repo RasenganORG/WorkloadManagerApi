@@ -40,9 +40,11 @@ const { addLoggedTime,
 } = require('../controllers/loggedTimeController');
 
 const {
-  userProjectAdd,
+  addUserProject,
   getUserProjects,
   getProjectUsers,
+  removeUserProjects,
+  removeProjectUsers
 } = require('../controllers/userProjectController');
 
 const router = express.Router();
@@ -75,7 +77,6 @@ router.get('/tasks/get-all', getAllTasks);
 router.put('/tasks/:id', updateTask);
 router.delete('/tasks/:id', deleteTask);
 router.delete('/tasks/project-delete/:projectId', deleteProjectTasks);
-router.put('/tasks/remove-users/:projectId', removeUsersFromTasks);
 
 //logged time routers
 router.post('/loggedTime/add', addLoggedTime);
@@ -84,9 +85,11 @@ router.get('/loggedTime/byTask/:taskId', getLoggedTimeByTask);
 router.get('/loggedTime/byProject/:projectId', getLoggedTimeByProject);
 
 //user project routes
-router.get('/userProject/add', userProjectAdd)
-router.get('/userProject/getUsersProjects', getUserProjects)
-router.get('/userProject/getProjectUsers', getProjectUsers)
+router.post('/userProject/add', addUserProject)
+router.get('/userProject/getUserProjects/:userId', getUserProjects)
+router.get('/userProject/getProjectUsers/:projectId', getProjectUsers)
+router.delete('/userProject/removeUserProjects/:projectId', removeUserProjects)
+router.delete('/userProject/removeProjectUsers/:userId', removeProjectUsers)
 
 module.exports = {
   routes: router
