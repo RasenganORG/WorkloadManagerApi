@@ -11,6 +11,8 @@ const addProject = async (req, res, next) => {
     const batch = firestore.batch()
     const projectsDocument = firestore.collection('projects').doc()
     const userProjectDocument = firestore.collection('userProject')
+    const backlogDocument = firestore.collection('backlog').doc()
+
     const { projectData, userData } = req.body
 
     //we add the new project to firebase
@@ -19,9 +21,9 @@ const addProject = async (req, res, next) => {
     userData.forEach(user => {
       //assign the project id to the userProject entry
       user.projectId = projectsDocument.id
-      console.log(user)
       batch.set(userProjectDocument.doc(), user)
     })
+    batch.set(backlogDocument, { backlogId: backlogDocument.id, projectId: projectsDocument.id })
     // await firestore.collection('projects').doc().set(data);
     // res.send('Project saved successfuly');
     batch.commit()

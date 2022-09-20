@@ -49,6 +49,15 @@ const {
   removeUsersFromProject
 } = require('../controllers/userProjectController');
 
+const {
+  addBacklogItem,
+  getBacklogItems
+} = require('../controllers/backlogController')
+const {
+  addSprint,
+  getSprintsByProject
+} = require('../controllers/sprintController')
+
 const router = express.Router();
 
 //project routers
@@ -95,6 +104,13 @@ router.delete('/userProject/removeUserProjects/:projectId', removeUserProjects)
 router.delete('/userProject/removeProjectUsers/:userId', removeProjectUsers)
 router.delete('/userProject/removeUsersFromProject/', removeUsersFromProject)
 
+//backlog routes 
+router.post('/backlog/add', addBacklogItem)
+router.get('/backlog/getAll', getBacklogItems)
+
+//sprint routes
+router.post('/sprint/add', addSprint)
+router.get('/sprint/getSprintsByProject/:projectId', getSprintsByProject)
 module.exports = {
   routes: router
 }
