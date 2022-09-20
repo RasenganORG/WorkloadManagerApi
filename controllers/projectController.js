@@ -8,10 +8,23 @@ const FieldValue = admin.firestore.FieldValue;
 
 const addProject = async (req, res, next) => {
   try {
-    const data = req.body;
+    const batch = firestore.batch()
+    const projectsDocument = firestore.collection('projects').doc()
+    const userProjectDocument = firestore.collection('userProject')
+    const { projectData, userData } = req.body
 
-    await firestore.collection('projects').doc().set(data);
-    res.send('Project saved successfuly');
+    //we add the new project to firebase
+    batch.set(projectsDocument, projectData)
+
+    userData.forEach(user => {
+      //assign the project id to the userProject entry
+      user.projectId = projectsDocument.id
+      console.log(user)
+      batch.set(userProjectDocument.doc(), user)
+    })
+    // await firestore.collection('projects').doc().set(data);
+    // res.send('Project saved successfuly');
+    batch.commit()
   } catch (error) {
     res.status(400).send(error.message);
   }

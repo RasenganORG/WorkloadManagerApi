@@ -11,7 +11,6 @@ const addUserProject = async (req, res, next) => {
     let userProject = firestore.collection('userProject')
     const data = req.body;
     data.forEach(user => {
-      console.log(user)
       batch.set(userProject.doc(), user)
     })
     await batch.commit();
@@ -60,9 +59,30 @@ const removeProjectUsers = async (req, res, next) => {
   }
 }
 
+const removeUsersFromProject = async (req, res, next) => {
+  try {
+    const usersToRemove = req.body.usersToRemove;
+    const projectId = req.body.projectId;
+
+    const batch = firestore.batch()
+    const userProject = await firestore.collection('userProject').get()
+    usersToRemove.forEach(userToRemove => {
+      userProject.forEach(userProject => {
+        if (userProject.ref.id === userToRemove.id) {
+          batch.delete(userProject.ref)
+        }
+      })
+    })
+
+    await batch.commit();
+
+    res.send('UserProject user entries deleted successfuly');
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+}
 const getUserProjects = async (req, res, next) => {
   try {
-    // console.log(req.body.userId)
     const userId = req.params.userId
     const userProject = await firestore.collection('userProject');
     const data = await userProject.get();
@@ -117,10 +137,35 @@ const getProjectUsers = async (req, res, next) => {
   }
 }
 
+const getAllUserProjects = async (req, res, next) => {
+  try {
+    const data = await firestore.collection('userProject').get();;
+
+    const userProjectsArray = [];
+    if (data.empty) {
+      res.status(404).send('No UserProject entries record found');
+    } else {
+      data.forEach(doc => {
+        const userProjectObj = new UserProject(
+          doc.id,
+          doc.data().userId,
+          doc.data().projectId,
+          doc.data().availability
+        );
+        userProjectsArray.push(userProjectObj);
+      });
+      res.send(userProjectsArray);
+    }
+  } catch (error) {
+    res.status(400).send(error.message);
+  }
+}
 module.exports = {
   addUserProject,
   getUserProjects,
   getProjectUsers,
+  getAllUserProjects,
   removeUserProjects,
-  removeProjectUsers
+  removeProjectUsers,
+  removeUsersFromProject
 }

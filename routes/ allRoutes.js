@@ -43,8 +43,10 @@ const {
   addUserProject,
   getUserProjects,
   getProjectUsers,
+  getAllUserProjects,
   removeUserProjects,
-  removeProjectUsers
+  removeProjectUsers,
+  removeUsersFromProject
 } = require('../controllers/userProjectController');
 
 const router = express.Router();
@@ -88,8 +90,10 @@ router.get('/loggedTime/byProject/:projectId', getLoggedTimeByProject);
 router.post('/userProject/add', addUserProject)
 router.get('/userProject/getUserProjects/:userId', getUserProjects)
 router.get('/userProject/getProjectUsers/:projectId', getProjectUsers)
+router.get('/userProject/getAll', getAllUserProjects)
 router.delete('/userProject/removeUserProjects/:projectId', removeUserProjects)
 router.delete('/userProject/removeProjectUsers/:userId', removeProjectUsers)
+router.delete('/userProject/removeUsersFromProject/', removeUsersFromProject)
 
 module.exports = {
   routes: router

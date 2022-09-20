@@ -41,7 +41,6 @@ const getAllLoggedTime = async (req, res, next) => {
 }
 const getLoggedTimeByTask = async (req, res, next) => {
   try {
-    console.log(req.params.taskId)
     const taskId = req.params.taskId
     const loggedTime = await firestore.collection('loggedTime');
     const data = await loggedTime.get();

@@ -95,7 +95,6 @@ const getLoggedUser = async (req, res, next) => {
       let user;
 
       userSnapshot.forEach((doc) => (user = { ...doc.data(), id: doc.id }))
-      console.log('user from db:', user);
 
       const result = user.password === pwd ? user : null;
 
