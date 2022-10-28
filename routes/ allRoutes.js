@@ -5,7 +5,6 @@ const {
   getProject,
   updateProject,
   deleteProject,
-
 } = require('../controllers/projectController');
 
 const {
@@ -15,13 +14,13 @@ const {
   updateUser,
   deleteUser,
   getLoggedUser,
-  updateUsersProject
+  updateUsersProject,
 } = require('../controllers/userController');
 
 const {
   addBilling,
-  getBillingOptions
-} = require('../controllers/billingController')
+  getBillingOptions,
+} = require('../controllers/billingController');
 
 const {
   addTask,
@@ -30,13 +29,14 @@ const {
   updateTask,
   deleteTask,
   deleteProjectTasks,
-  removeUsersFromTasks
+  removeUsersFromTasks,
 } = require('../controllers/tasksController');
 
-const { addLoggedTime,
+const {
+  addLoggedTime,
   getAllLoggedTime,
   getLoggedTimeByTask,
-  getLoggedTimeByProject
+  getLoggedTimeByProject,
 } = require('../controllers/loggedTimeController');
 
 const {
@@ -46,17 +46,26 @@ const {
   getAllUserProjects,
   removeUserProjects,
   removeProjectUsers,
-  removeUsersFromProject
+  removeUsersFromProject,
 } = require('../controllers/userProjectController');
 
 const {
   addBacklogItem,
-  getBacklogItems
-} = require('../controllers/backlogController')
+  getBacklogItems,
+} = require('../controllers/backlogController');
+
 const {
   addSprint,
-  getSprintsByProject
-} = require('../controllers/sprintController')
+  getSprintsByProject,
+} = require('../controllers/sprintController');
+
+const {
+  addEmployee,
+  getAllEmployees,
+  getEmployee,
+  updateEmployee,
+  deleteEmployee,
+} = require('../controllers/employeeController');
 
 const router = express.Router();
 
@@ -67,7 +76,6 @@ router.get('/project/:id', getProject);
 router.put('/project/:id', updateProject);
 router.delete('/project/:id', deleteProject);
 
-
 //user routes
 router.post('/user', addUser);
 router.get('/users', getAllUsers);
@@ -75,13 +83,13 @@ router.get('/user/:id', getUser);
 router.put('/user/:id', updateUser);
 router.delete('/user/:id', deleteUser);
 router.get('/getLoggedUser/:email', getLoggedUser);
-router.put('/users/:projectId', updateUsersProject)
+router.put('/users/:projectId', updateUsersProject);
 
 //billing routes
 router.post('/billing', addBilling);
-router.get('/billing', getBillingOptions)
+router.get('/billing', getBillingOptions);
 
-//tasks routes 
+//tasks routes
 router.post('/tasks', addTask);
 router.get('/tasks', getTask);
 router.get('/tasks/get-all', getAllTasks);
@@ -96,21 +104,29 @@ router.get('/loggedTime/byTask/:taskId', getLoggedTimeByTask);
 router.get('/loggedTime/byProject/:projectId', getLoggedTimeByProject);
 
 //user project routes
-router.post('/userProject/add', addUserProject)
-router.get('/userProject/getUserProjects/:userId', getUserProjects)
-router.get('/userProject/getProjectUsers/:projectId', getProjectUsers)
-router.get('/userProject/getAll', getAllUserProjects)
-router.delete('/userProject/removeUserProjects/:projectId', removeUserProjects)
-router.delete('/userProject/removeProjectUsers/:userId', removeProjectUsers)
-router.delete('/userProject/removeUsersFromProject/', removeUsersFromProject)
+router.post('/userProject/add', addUserProject);
+router.get('/userProject/getUserProjects/:userId', getUserProjects);
+router.get('/userProject/getProjectUsers/:projectId', getProjectUsers);
+router.get('/userProject/getAll', getAllUserProjects);
+router.delete('/userProject/removeUserProjects/:projectId', removeUserProjects);
+router.delete('/userProject/removeProjectUsers/:userId', removeProjectUsers);
+router.delete('/userProject/removeUsersFromProject/', removeUsersFromProject);
 
-//backlog routes 
-router.post('/backlog/add', addBacklogItem)
-router.get('/backlog/getAll', getBacklogItems)
+//backlog routes
+router.post('/backlog/add', addBacklogItem);
+router.get('/backlog/getAll', getBacklogItems);
 
 //sprint routes
-router.post('/sprint/add', addSprint)
-router.get('/sprint/getSprintsByProject/:projectId', getSprintsByProject)
+router.post('/sprint/add', addSprint);
+router.get('/sprint/getSprintsByProject/:projectId', getSprintsByProject);
+
+//employees routes
+router.post('/employee/add', addEmployee);
+router.get('/employee/getEmployeeById', getEmployee);
+router.get('/employee/:id', getAllEmployees);
+router.put('/employee/:id', updateEmployee);
+router.delete('/employee/:id', deleteEmployee);
+
 module.exports = {
-  routes: router
-}
+  routes: router,
+};

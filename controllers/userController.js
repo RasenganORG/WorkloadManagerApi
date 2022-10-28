@@ -4,10 +4,9 @@ const firebase = require('../db');
 const User = require('../models/user');
 const firestore = firebase.firestore();
 
-
 const addUser = async (req, res, next) => {
   try {
-    const data = req.body
+    const data = req.body;
 
     // Get email from from submitted
     const email = req.body.email;
@@ -20,16 +19,14 @@ const addUser = async (req, res, next) => {
     //if no users are found with the same email we proceed w the registration
     if (userSnapshot.empty) {
       await firestore.collection('users').doc().set(data);
-      res.status(201).json({ ...data })
-
+      res.status(201).json({ ...data });
     } else {
       res.status(404).send('Email is already used!');
     }
   } catch (error) {
     res.status(400).send(error.message);
   }
-
-}
+};
 
 const getAllUsers = async (req, res, next) => {
   try {
@@ -40,7 +37,7 @@ const getAllUsers = async (req, res, next) => {
     if (data.empty) {
       res.status(404).send('No user record found');
     } else {
-      data.forEach(doc => {
+      data.forEach((doc) => {
         const user = new User(
           doc.id,
           doc.data().name,
@@ -50,7 +47,7 @@ const getAllUsers = async (req, res, next) => {
           doc.data().avatar,
           doc.data().projectsAssignedTo,
           doc.data().loggedIn,
-          doc.data().plannedWorkload,
+          doc.data().plannedWorkload
         );
         usersArray.push(user);
       });
@@ -59,7 +56,7 @@ const getAllUsers = async (req, res, next) => {
   } catch (error) {
     res.status(400).send(error.message);
   }
-}
+};
 
 const getUser = async (req, res, next) => {
   try {
@@ -75,7 +72,7 @@ const getUser = async (req, res, next) => {
   } catch (error) {
     res.status(400).send(error.message);
   }
-}
+};
 
 const getLoggedUser = async (req, res, next) => {
   try {
@@ -94,7 +91,7 @@ const getLoggedUser = async (req, res, next) => {
     } else {
       let user;
 
-      userSnapshot.forEach((doc) => (user = { ...doc.data(), id: doc.id }))
+      userSnapshot.forEach((doc) => (user = { ...doc.data(), id: doc.id }));
 
       const result = user.password === pwd ? user : null;
 
@@ -116,7 +113,7 @@ const updateUser = async (req, res, next) => {
   } catch (error) {
     res.status(400).send(error.message);
   }
-}
+};
 
 const deleteUser = async (req, res, next) => {
   try {
@@ -126,49 +123,52 @@ const deleteUser = async (req, res, next) => {
   } catch (error) {
     res.status(400).send(error.message);
   }
-}
+};
 
 const updateUsersProject = async (req, res, next) => {
-  const { usersToAddProject, usersToRemoveProject } = req.body.data
-  const projectId = req.body.projectId
+  const { usersToAddProject, usersToRemoveProject } = req.body.data;
+  const projectId = req.body.projectId;
 
-  firestore.collection("users").get()
+  firestore
+    .collection('users')
+    .get()
     .then(function (querySnapshot) {
       querySnapshot.forEach(function (doc) {
         if (usersToAddProject) {
           usersToAddProject.forEach((user) => {
             if (user === doc.id) {
-              const newArr = doc.data().projectsAssignedTo
-              newArr.push(projectId)
-              firestore.collection("users").doc(doc.id).update({
-                projectsAssignedTo: newArr
-              })
+              const newArr = doc.data().projectsAssignedTo;
+              newArr.push(projectId);
+              firestore.collection('users').doc(doc.id).update({
+                projectsAssignedTo: newArr,
+              });
             }
-          })
+          });
         } else {
         }
 
         if (usersToRemoveProject) {
           usersToRemoveProject.forEach((user) => {
             if (user === doc.id) {
-              const projectIndex = doc.data().projectsAssignedTo.indexOf(projectId)
-              const arrayWithRemovedProject = doc.data().projectsAssignedTo
+              const projectIndex = doc
+                .data()
+                .projectsAssignedTo.indexOf(projectId);
+              const arrayWithRemovedProject = doc.data().projectsAssignedTo;
 
-              arrayWithRemovedProject.splice(projectIndex, 1)
+              arrayWithRemovedProject.splice(projectIndex, 1);
 
-              firestore.collection("users").doc(doc.id).update({
-                projectsAssignedTo: arrayWithRemovedProject
-              })
+              firestore.collection('users').doc(doc.id).update({
+                projectsAssignedTo: arrayWithRemovedProject,
+              });
             }
-          })
+          });
         } else {
         }
-
-      })
+      });
       res.send('Record deleted successfuly');
     })
-    .catch(error => res.status(400).send(error.message))
-}
+    .catch((error) => res.status(400).send(error.message));
+};
 
 module.exports = {
   addUser,
@@ -177,5 +177,5 @@ module.exports = {
   updateUser,
   deleteUser,
   getLoggedUser,
-  updateUsersProject
-}
+  updateUsersProject,
+};
